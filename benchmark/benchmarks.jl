@@ -65,12 +65,7 @@ function test(cutest_problems)
 end
 
 const SUITE = BenchmarkGroup()
-SUITE[:cutest_hess] = @benchmarkable begin
-  for nlp in cutest_problems
-    hess(nlp, nlp.meta.x0, nlp.meta.y0)
-    finalize(nlp)
-  end
-end setup=(test(cutest_problems))
+SUITE[:cutest_hess] = @benchmarkable test(cutest_problems) setup=(test(cutest_problems))
 SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers) setup=(runcutest(cutest_problems, solvers))
-tune!(SUITE[:cutest_hess])
-tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
+#tune!(SUITE[:cutest_hess])
+#tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
