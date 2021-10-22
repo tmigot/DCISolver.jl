@@ -2,11 +2,11 @@
 
 ## Job Properties
 * Time of benchmarks:
-    - Target: 23 Oct 2021 - 00:43
-    - Baseline: 23 Oct 2021 - 00:45
+    - Target: 23 Oct 2021 - 00:56
+    - Baseline: 23 Oct 2021 - 00:59
 * Package commits:
-    - Target: a26838
-    - Baseline: 3c5ee8
+    - Target: a4c7b4
+    - Baseline: b4eab4
 * Julia commits:
     - Target: f9720d
     - Baseline: f9720d
@@ -23,9 +23,9 @@ than `1.0` denotes a possible improvement (marked with :white_check_mark:). Only
 that indicate possible regressions or improvements - are shown below (thus, an empty table means that all
 benchmark results remained invariant between builds).
 
-| ID                                  | time ratio    | memory ratio  |
-|-------------------------------------|---------------|---------------|
-| `["cutest_dcildl_ipopt_benchmark"]` | 2.12 (5%) :x: | 3.58 (1%) :x: |
+| ID                                  | time ratio                   | memory ratio                 |
+|-------------------------------------|------------------------------|------------------------------|
+| `["cutest_dcildl_ipopt_benchmark"]` | 0.69 (5%) :white_check_mark: | 0.61 (1%) :white_check_mark: |
 
 ## Benchmark Group List
 Here's a list of all the benchmark groups executed by this job:
@@ -44,14 +44,14 @@ Platform Info:
   uname: Linux 4.15.0-144-generic #148-Ubuntu SMP Sat May 8 02:33:43 UTC 2021 x86_64 x86_64
   CPU: Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz: 
               speed         user         nice          sys         idle          irq
-       #1  1852 MHz     245289 s        373 s      46272 s    1321229 s          0 s
-       #2  2076 MHz     228444 s        983 s      49218 s     315504 s          0 s
-       #3  1909 MHz     203606 s        481 s      46430 s     299851 s          0 s
-       #4  2029 MHz     250009 s        412 s      44023 s     263894 s          0 s
+       #1  1683 MHz     247974 s        373 s      46475 s    1326105 s          0 s
+       #2  2069 MHz     229869 s        983 s      49388 s     321683 s          0 s
+       #3  1824 MHz     204677 s        481 s      46632 s     306342 s          0 s
+       #4  1874 MHz     251039 s        412 s      44194 s     270290 s          0 s
        
-  Memory: 7.6889801025390625 GB (456.3203125 MB free)
-  Uptime: 195265.0 sec
-  Load Avg:  2.18  2.26  2.54
+  Memory: 7.6889801025390625 GB (278.87890625 MB free)
+  Uptime: 196054.0 sec
+  Load Avg:  2.16  2.24  2.35
   WORD_SIZE: 64
   LIBM: libopenlibm
   LLVM: libLLVM-11.0.1 (ORCJIT, haswell)
@@ -67,14 +67,14 @@ Platform Info:
   uname: Linux 4.15.0-144-generic #148-Ubuntu SMP Sat May 8 02:33:43 UTC 2021 x86_64 x86_64
   CPU: Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz: 
               speed         user         nice          sys         idle          irq
-       #1  1214 MHz     245883 s        373 s      46287 s    1321742 s          0 s
-       #2  1198 MHz     228808 s        983 s      49231 s     316246 s          0 s
-       #3  1160 MHz     203784 s        481 s      46445 s     300778 s          0 s
-       #4  1480 MHz     250069 s        412 s      44036 s     264923 s          0 s
+       #1  1773 MHz     248809 s        373 s      46504 s    1327082 s          0 s
+       #2  1832 MHz     230152 s        983 s      49420 s     323209 s          0 s
+       #3  1877 MHz     205003 s        481 s      46665 s     307826 s          0 s
+       #4  1851 MHz     251440 s        412 s      44227 s     271666 s          0 s
        
-  Memory: 7.6889801025390625 GB (312.6015625 MB free)
-  Uptime: 195378.0 sec
-  Load Avg:  2.15  2.22  2.49
+  Memory: 7.6889801025390625 GB (252.41015625 MB free)
+  Uptime: 196240.0 sec
+  Load Avg:  2.34  2.28  2.35
   WORD_SIZE: 64
   LIBM: libopenlibm
   LLVM: libLLVM-11.0.1 (ORCJIT, haswell)
