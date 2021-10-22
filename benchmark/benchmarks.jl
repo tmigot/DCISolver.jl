@@ -70,7 +70,7 @@ SUITE[:cutest_hess] = @benchmarkable begin
     hess(nlp, nlp.meta.x0, nlp.meta.y0)
     finalize(nlp)
   end
-end
-SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers) setup=(test(cutest_problems))
+end setup=(test(cutest_problems))
+SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers) setup=(runcutest(cutest_problems, solvers))
 tune!(SUITE[:cutest_hess])
 tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
