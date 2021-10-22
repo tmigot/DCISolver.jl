@@ -64,3 +64,5 @@ SUITE[:cutest_hess] = @benchmarkable begin
   end
 end
 SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers)
+tune!(SUITE[:cutest_hess])
+tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
