@@ -11,11 +11,7 @@ function runcutest(cutest_problems, solvers; today::String = string(today()))
   for solver in keys(solvers)
     list = string(list, "_$(solver)")
   end
-  stats = bmark_solvers(solvers, cutest_problems)
-
-  # @save "$(today)_$(list)_$(string(length(pnames))).jld2" stats
-
-  return stats
+  return bmark_solvers(solvers, cutest_problems)
 end
 
 nmax = 300
@@ -57,15 +53,7 @@ solvers = Dict(
       max_eval = typemax(Int64),
     ),
 )
-function test(cutest_problems)
-  for nlp in cutest_problems
-    hess(nlp, nlp.meta.x0, nlp.meta.y0)
-    finalize(nlp)
-  end
-end
 
 const SUITE = BenchmarkGroup()
-SUITE[:cutest_hess] = @benchmarkable test(cutest_problems)
 SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers)
-tune!(SUITE[:cutest_hess])
 tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
