@@ -55,14 +55,20 @@ solvers = Dict(
       max_eval = typemax(Int64),
     ),
 )
+function test(cutest_problems)
+  for nlp in cutest_problems
+    hess(nlp, nlp.meta.x0, nlp.meta.y0)
+    finalize(nlp)
+  end
+end
 
 const SUITE = BenchmarkGroup()
 SUITE[:cutest_hess] = @benchmarkable begin
   for nlp in cutest_problems
-      hess(nlp, nlp.meta.x0, nlp.meta.y0)
-      finalize(nlp)
+    hess(nlp, nlp.meta.x0, nlp.meta.y0)
+    finalize(nlp)
   end
-end
-SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers)
+end setup=(test(cutest_problems))
+SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers) setup=(test(cutest_problems))
 tune!(SUITE[:cutest_hess])
 tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
