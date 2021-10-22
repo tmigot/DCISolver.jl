@@ -67,5 +67,5 @@ end
 const SUITE = BenchmarkGroup()
 SUITE[:cutest_hess] = @benchmarkable test(cutest_problems) setup=(test(cutest_problems))
 SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers) setup=(runcutest(cutest_problems, solvers))
-#tune!(SUITE[:cutest_hess])
-#tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
+tune!(SUITE[:cutest_hess])
+tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
