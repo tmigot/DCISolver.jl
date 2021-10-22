@@ -57,4 +57,10 @@ solvers = Dict(
 )
 
 const SUITE = BenchmarkGroup()
+SUITE[:cutest_hess] = @benchmarkable begin
+  for nlp in cutest_problems
+      hess(nlp, nlp.meta.x0, nlp.meta.y0)
+      finalize(nlp)
+  end
+end
 SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers)
