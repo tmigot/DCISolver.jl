@@ -1,8 +1,10 @@
-using BenchmarkTools, DataFrames, Dates, DelimitedFiles, JLD2
+using BenchmarkTools, DataFrames, Dates, DelimitedFiles, JLD2, Random
 #JSO packages
 using CUTEst, NLPModels, NLPModelsKnitro, NLPModelsIpopt, SolverBenchmark, SolverCore
 #This package
 using DCISolver
+
+Random.seed!(1234)
 
 function runcutest(cutest_problems, solvers; today::String = string(today()))
   list = ""
@@ -28,7 +30,7 @@ _pnames = CUTEst.select(
 
 #Remove all the problems ending by NE as Ipopt cannot handle them.
 pnamesNE = _pnames[findall(x -> occursin(r"NE\b", x), _pnames)]
-pnames = setdiff(_pnames, pnamesNE)
+pnames = setdiff(_pnames, pnamesNE)[1:10]
 cutest_problems = (CUTEstModel(p) for p in pnames)
 
 #Same time limit for all the solvers
@@ -68,7 +70,7 @@ SUITE[:cutest_hess] = @benchmarkable begin
     hess(nlp, nlp.meta.x0, nlp.meta.y0)
     finalize(nlp)
   end
-end setup=(test(cutest_problems))
+end
 SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers) setup=(test(cutest_problems))
 tune!(SUITE[:cutest_hess])
 tune!(SUITE[:cutest_dcildl_ipopt_benchmark])
