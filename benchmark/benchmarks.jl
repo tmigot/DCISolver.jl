@@ -57,5 +57,4 @@ solvers = Dict(
 )
 
 const SUITE = BenchmarkGroup()
-SUITE[:cutest_dcildl_ipopt_benchmark] =
-  @benchmarkable runcutest(cutest_problems, solvers) samples = 5
+SUITE[:cutest_dcildl_ipopt_benchmark] = @benchmarkable runcutest(cutest_problems, solvers)
