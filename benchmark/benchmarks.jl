@@ -13,7 +13,7 @@ function runcutest(cutest_problems, solvers; today::String = string(today()))
   end
   stats = bmark_solvers(solvers, cutest_problems)
 
-  @save "$(today)_$(list)_$(string(length(pnames))).jld2" stats
+  # @save "$(today)_$(list)_$(string(length(pnames))).jld2" stats
 
   return stats
 end
@@ -30,7 +30,7 @@ _pnames = CUTEst.select(
 
 #Remove all the problems ending by NE as Ipopt cannot handle them.
 pnamesNE = _pnames[findall(x -> occursin(r"NE\b", x), _pnames)]
-pnames = setdiff(_pnames, pnamesNE)[1:10]
+pnames = setdiff(_pnames, pnamesNE)
 cutest_problems = (CUTEstModel(p) for p in pnames)
 
 #Same time limit for all the solvers
