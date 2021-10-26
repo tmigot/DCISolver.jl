@@ -1,8 +1,10 @@
-using BenchmarkTools, DataFrames, Dates, DelimitedFiles, JLD2
+using BenchmarkTools, DataFrames, Dates, DelimitedFiles, JLD2, Random
 #JSO packages
 using CUTEst, NLPModels, NLPModelsKnitro, NLPModelsIpopt, SolverBenchmark, SolverCore
 #This package
 using DCISolver
+
+Random.seed!(1234)
 
 function runcutest(cutest_problems, solvers; today::String = string(today()))
   list = ""
@@ -30,17 +32,17 @@ cutest_problems = (CUTEstModel(p) for p in pnames)
 #Same time limit for all the solvers
 max_time = 60.0 #20 minutes
 solvers = Dict(
-  #:ipopt =>
-  #  nlp -> ipopt(
-  #    nlp,
-  #    print_level = 0,
-  #    dual_inf_tol = Inf,
-  #    constr_viol_tol = Inf,
-  #    compl_inf_tol = Inf,
-  #    acceptable_iter = 0,
-  #    max_cpu_time = max_time,
-  #    x0 = nlp.meta.x0,
-  #  ),
+  :ipopt =>
+    nlp -> ipopt(
+      nlp,
+      print_level = 0,
+      dual_inf_tol = Inf,
+      constr_viol_tol = Inf,
+      compl_inf_tol = Inf,
+      acceptable_iter = 0,
+      max_cpu_time = max_time,
+      x0 = nlp.meta.x0,
+  ),
   :DCILDL =>
     nlp -> dci(
       nlp,
