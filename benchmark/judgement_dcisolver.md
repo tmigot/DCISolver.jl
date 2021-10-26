@@ -2,11 +2,11 @@
 
 ## Job Properties
 * Time of benchmarks:
-    - Target: 23 Oct 2021 - 01:59
-    - Baseline: 23 Oct 2021 - 02:04
+    - Target: 26 Oct 2021 - 02:19
+    - Baseline: 26 Oct 2021 - 02:24
 * Package commits:
-    - Target: 5d85e3
-    - Baseline: 6741e6
+    - Target: afbe67
+    - Baseline: 79fa24
 * Julia commits:
     - Target: f9720d
     - Baseline: f9720d
@@ -44,14 +44,14 @@ Platform Info:
   uname: Linux 4.15.0-144-generic #148-Ubuntu SMP Sat May 8 02:33:43 UTC 2021 x86_64 x86_64
   CPU: Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz: 
               speed         user         nice          sys         idle          irq
-       #1  2039 MHz     258710 s        373 s      47255 s    1351550 s          0 s
-       #2  1843 MHz     234562 s        983 s      50000 s     353479 s          0 s
-       #3  1851 MHz     209718 s        481 s      47292 s     337678 s          0 s
-       #4  1809 MHz     258943 s        412 s      44808 s     298182 s          0 s
+       #1  2032 MHz      38428 s         92 s       7829 s     203921 s          0 s
+       #2  1992 MHz      39317 s         99 s       7688 s     203668 s          0 s
+       #3  1670 MHz      37954 s        109 s       7338 s     205625 s          0 s
+       #4  1706 MHz      39043 s        391 s       6511 s     197193 s          0 s
        
-  Memory: 7.6889801025390625 GB (372.50390625 MB free)
-  Uptime: 199810.0 sec
-  Load Avg:  2.14  2.14  2.02
+  Memory: 7.6889801025390625 GB (389.2578125 MB free)
+  Uptime: 25765.0 sec
+  Load Avg:  2.19  2.12  2.04
   WORD_SIZE: 64
   LIBM: libopenlibm
   LLVM: libLLVM-11.0.1 (ORCJIT, haswell)
@@ -67,14 +67,14 @@ Platform Info:
   uname: Linux 4.15.0-144-generic #148-Ubuntu SMP Sat May 8 02:33:43 UTC 2021 x86_64 x86_64
   CPU: Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz: 
               speed         user         nice          sys         idle          irq
-       #1  1879 MHz     259540 s        373 s      47300 s    1353729 s          0 s
-       #2  1719 MHz     234733 s        983 s      50029 s     356336 s          0 s
-       #3  1991 MHz     210689 s        481 s      47330 s     339729 s          0 s
-       #4  1853 MHz     260088 s        412 s      44864 s     299990 s          0 s
+       #1  1810 MHz      39738 s         92 s       7886 s     205594 s          0 s
+       #2  1821 MHz      39589 s         99 s       7721 s     206391 s          0 s
+       #3  1957 MHz      38828 s        109 s       7369 s     207758 s          0 s
+       #4  1779 MHz      39633 s        391 s       6538 s     199557 s          0 s
        
-  Memory: 7.6889801025390625 GB (397.4140625 MB free)
-  Uptime: 200119.0 sec
-  Load Avg:  2.04  2.19  2.08
+  Memory: 7.6889801025390625 GB (389.859375 MB free)
+  Uptime: 26071.0 sec
+  Load Avg:  2.03  2.08  2.04
   WORD_SIZE: 64
   LIBM: libopenlibm
   LLVM: libLLVM-11.0.1 (ORCJIT, haswell)
