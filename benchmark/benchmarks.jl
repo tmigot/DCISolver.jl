@@ -1,10 +1,8 @@
-using BenchmarkTools, DataFrames, Dates, DelimitedFiles, JLD2, Random
+using BenchmarkTools, DataFrames, Dates, DelimitedFiles, JLD2
 #JSO packages
 using CUTEst, NLPModels, NLPModelsKnitro, NLPModelsIpopt, SolverBenchmark, SolverCore
 #This package
 using DCISolver
-
-Random.seed!(1234)
 
 function runcutest(cutest_problems, solvers; today::String = string(today()))
   list = ""
