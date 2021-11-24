@@ -70,8 +70,8 @@ One main advantage of JSO-compliant solvers is the consistent API; the origin of
 
 To the best of our knowledge, there is no available maintained open-source implementation of DCI in existence. The original authors did not make their implementation public, and the other known implementation is `dcicpp` [@dcicpp], extending the original method to inequalities in the Ph.D. thesis by @siqueira2013controle, and it has had no updates in the last 5 years. Hence, we offer an interesting alternative to augmented Lagrangian and interior-point methods in the form of an evolving, research level yet stable and mature, solver.
 
-All in all, with a few lines of codes, one can solve large-scale problems or benchmark `DCISolver.jl` against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
-We include below performance profiles of `DCISolver.jl` against Ipopt on CUTEst problems with up to 10 000 variables and 10 000 constraints illustrating that `DCISolver` is a fast and stable alternative to a state of the art solver. Last but not least, the package's documentation includes benchmarks on classical test sets showing that this implementation is very competitive.
+All in all, with `DCISolver.jl`, one can solve large-scale problems or benchmark against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
+We include below performance profiles [@dolan2002benchmarking] of `DCISolver.jl` against Ipopt on CUTEst [@cutest] problems with up to 10 000 variables and 10 000 constraints illustrating that `DCISolver` is a fast and stable alternative to a state of the art solver. Last but not least, the package's documentation includes benchmarks on classical test sets showing that this implementation is very competitive.
 
 <!--
 NOTE: Putting the code is too long
