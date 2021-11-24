@@ -115,7 +115,7 @@ p = profile_solvers(stats, costs, costnames)
 ```
 -->
 
-![](ipopt_dcildl_82_time.png =100x20)
+![](ipopt_dcildl_82_time.png){ width=50% }
 
 # Acknowledgements
 
