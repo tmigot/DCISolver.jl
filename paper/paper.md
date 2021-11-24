@@ -63,14 +63,15 @@ Julia has been designed to efficiently implement softwares and algorithms fundam
 There already exist ways to solve \eqref{eq:nlp} in Julia.
 If \eqref{eq:nlp} is amenable to being modeled in `JuMP` [@jump], the model may be passed to state-of-the-art solvers, implemented in low-level compiled languages, via wrappers thanks to Julia's native interoperability with such languages.
 However, interfaces to low-level languages have limitations that pure Julia implementations do not have, including the ability to apply solvers with various arithmetic types.
-`Optim.jl` [@mogensen2018optim] implements a pure Julia primal-dual interior-point method for problems with both equality and inequality constrained modeled after Artlelys Knitro [@byrd2006k] and Ipopt [@wachter2006implementation].
+`Optim.jl` [@mogensen2018optim] implements a pure Julia primal-dual interior-point method for problems with both equality and inequality constraints modeled after Artlelys Knitro [@byrd2006k] and Ipopt [@wachter2006implementation].
 
 JSO offers both types of solution mechanisms with thin wrappers to Artelys Knitro via `NLPModelsKnitro.jl` [@orban-siqueira-nlpmodelsknitro-2020] and Ipopt via `NLPModelsIpopt.jl` [@orban-siqueira-nlpmodelsipopt-2020] that let users pass in an `AbstractNLPModel`, and `Percival.jl` [@percival-jl], a pure Julia implementation of an augmented Lagrangian method based on bound-constrained subproblems.
 One main advantage of JSO-compliant solvers is the consistent API; the origin of the input problem is irrelevant.
-Finally, to the best of our knowledge, there is no available maintained open-source implementation of DCI in existence. The original authors did not make their implementation public, and the other known implementation is `dcicpp` [@dcicpp], extending the original method to inequalities in the Ph.D. thesis by @siqueira2013controle, and it has had no updates in the last 5 years. Hence, we offer an interesting alternative to augmented Lagrangian and interior-point methods in the form of an evolving, research level yet stable and mature, solver.
+
+To the best of our knowledge, there is no available maintained open-source implementation of DCI in existence. The original authors did not make their implementation public, and the other known implementation is `dcicpp` [@dcicpp], extending the original method to inequalities in the Ph.D. thesis by @siqueira2013controle, and it has had no updates in the last 5 years. Hence, we offer an interesting alternative to augmented Lagrangian and interior-point methods in the form of an evolving, research level yet stable and mature, solver.
 
 All in all, with a few lines of codes, one can solve large-scale problems or benchmark `DCISolver.jl` against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
-We include below performance profiles of `DCISolver` versus `Ipopt` on CUTEst problems with up to 10 000 variables and 10 000 constraints illustrating that `DCISolver` is a fast and stable alternative to a state of the art solver. Last but not least, the documentation of this package includes benchmarks on classical test sets  showing that this implementation is very competitive.
+We include below performance profiles of `DCISolver.jl` against Ipopt on CUTEst problems with up to 10 000 variables and 10 000 constraints illustrating that `DCISolver` is a fast and stable alternative to a state of the art solver. Last but not least, the package's documentation includes benchmarks on classical test sets showing that this implementation is very competitive.
 
 <!--
 NOTE: Putting the code is too long
@@ -114,7 +115,7 @@ p = profile_solvers(stats, costs, costnames)
 ```
 -->
 
-![](ipopt_dcildl_82.png)
+![](ipopt_dcildl_82.svg)
 
 # Acknowledgements
 
