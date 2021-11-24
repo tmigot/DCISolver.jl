@@ -58,42 +58,22 @@ Maybe say a word about performance here?
 
 # Statement of need
 
-Julia has been designed to efficiently implement softwares and algorithms fundamental to the field of operations research, particularly in mathematical optimization [@lubin2015computing], and has become a natural choice for delopping new solvers. `DCISolver.jl` is coded in pure Julia, hence it does not require external compiled dependencies and work with multiple input data types.
-<!--
-NOTE: This paragraph sells Julia when it should be selling DCI. It's ok to have a sentence or two about Julia, but the focus should be on DCI.
-
-Julia has been designed to efficiently implement softwares and algorithms fundamental to the field of operations research, particularly in mathematical optimization [@lubin2015computing], and has become a natural choice for solvers such as `DCISolver.jl`.
-Low-level languages, such as C++ and Fortran, have a rather steep learning curve and long write-compile-link-debug cycles.
-Julia has a high-level syntax inspired by other well-known languages, such as Matlab and Python, and it uses just-in-time compilation to achieve high performance.
-One of Julia's aspects is the ability to access C, Fortran, or Python code without sacrificing speed natively, which helps tackle the two language problems -- prototype on high-level, reimplement in low-level.
-In Julia, one can create a prototype just as quickly as other high-level languages, but the resulting prototype is considerably more efficient [@bezanson2017julia], which is of great importance for methods like DCI that are still under research development.
-Furthermore, the prototype can be improved instead of moving the code to a low-level language until a competitive version is obtained.
-Additionally, solvers coded in pure Julia do not require external compiled dependencies and work with multiple input data types, while solvers in Fortran are limited to simple and double precisions.
--->
+Julia has been designed to efficiently implement softwares and algorithms fundamental to the field of operations research, particularly in mathematical optimization [@lubin2015computing], and has become a natural choice for developing new solvers. `DCISolver.jl` is coded in pure Julia, hence it does not require external compiled dependencies and work with multiple input data types.
 
 There already exist ways to solve \eqref{eq:nlp} in Julia.
 If \eqref{eq:nlp} is amenable to being modeled in `JuMP` [@jump], the model may be passed to state-of-the-art solvers, implemented in low-level compiled languages, via wrappers thanks to Julia's native interoperability with such languages.
 However, interfaces to low-level languages have limitations that pure Julia implementations do not have, including the ability to apply solvers with various arithmetic types.
-`Optim.jl` [@mogensen2018optim] implements a pure Julia primal-dual interior-point method for problems with both equality and inequality constrained modeled after Artlelys Knitro and Ipopt.
+`Optim.jl` [@mogensen2018optim] implements a pure Julia primal-dual interior-point method for problems with both equality and inequality constrained modeled after Artlelys Knitro [@byrd2006k] and Ipopt [@wachter2006implementation].
 
-JSO offers both types of solution mechanisms with thin wrappers to Artelys Knitro [@byrd2006k] via `NLPModelsKnitro.jl` [@orban-siqueira-nlpmodelsknitro-2020] and Ipopt [@wachter2006implementation] via `NLPModelsIpopt.jl` [@orban-siqueira-nlpmodelsipopt-2020] that let users pass in an `AbstractNLPModel`, and `Percival.jl` [@percival-jl], a pure Julia implementation of an augmented Lagrangian method based on bound-constrained subproblems.
+JSO offers both types of solution mechanisms with thin wrappers to Artelys Knitro via `NLPModelsKnitro.jl` [@orban-siqueira-nlpmodelsknitro-2020] and Ipopt via `NLPModelsIpopt.jl` [@orban-siqueira-nlpmodelsipopt-2020] that let users pass in an `AbstractNLPModel`, and `Percival.jl` [@percival-jl], a pure Julia implementation of an augmented Lagrangian method based on bound-constrained subproblems.
 One main advantage of JSO-compliant solvers is the consistent API; the origin of the input problem is irrelevant.
 Finally, to the best of our knowledge, there is no available maintained open-source implementation of DCI in existence. The original authors did not make their implementation public, and the other known implementation is `dcicpp` [@dcicpp], extending the original method to inequalities in the Ph.D. thesis by @siqueira2013controle, and it has had no updates in the last 5 years. Hence, we offer an interesting alternative to augmented Lagrangian and interior-point methods in the form of an evolving, research level yet stable and mature, solver.
 
+All in all, with a few lines of codes, one can solve large-scale problems or benchmark `DCISolver.jl` against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
+We include below performance profiles of `DCISolver` versus `Ipopt` on CUTEst problems with up to 10 000 variables and 10 000 constraints illustrating that `DCISolver` is a fast and stable alternative to a state of the art solver. Last but not least, the documentation of this package includes benchmarks on classical test sets  showing that this implementation is very competitive.
+
 <!--
-NOTE: This paragraph is about JSO, not DCI. Focus on DCI.
-
-`DCISolver.jl` is designed to help application experts quickly solve real-world problems and help researchers improve, compare and analyze new techniques without writing algorithms themselves.
-The user benefits from JuliaSmoothOptimizers's framework to solve nonlinear optimization problems of diverse nature in an accessible fashion, which makes it very suitable for numerical optimization courses.
-
-NOTE: Finally, a word about benchmarks! But we should show a taste of the performance of DCI instead of talking about Julia or JSO.
-
-Last but not least, the documentation of this package includes benchmarks on classical test sets, e.g., CUTEst [@cutest], showing that this implementation is also very competitive.
--->
-
-All in all, with a few lines of codes, one can benchmark `DCISolver.jl` against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020] or solve large-scale problems.
-Last but not least, the documentation of this package includes benchmarks on classical test sets, e.g., CUTEst [@cutest], showing that this implementation is also very competitive.
-
+NOTE: Putting the code is too long
 ```
 using CUTEst, DCISolver, NLPModels, NLPModelsIpopt, Plots, SolverBenchmark
 
@@ -132,15 +112,9 @@ costs = [
 costnames = ["Time", "Evalutions of obj + cons"]
 p = profile_solvers(stats, costs, costnames)
 ```
+-->
 
 ![](ipopt_dcildl_82.png)
-
-```
-using DCISolver, PDEOptimizationProblems
-nlp = burger1d() # An optimization problem with a 1D Burger's equation in the constraints
-stats = dci(nlp) # solve with DCISolver
-# stats is a structure containing the information available at the end of the run, including a solver status, the objective function value, the norm of the constraint function, the elapsed time, and a dictionary of solver specifics.
-```
 
 # Acknowledgements
 
