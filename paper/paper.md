@@ -42,29 +42,23 @@ Each time the trust cylinder is violated during the tangential step, the normal 
 The radius $\rho$ of the trust cylinder decreases with the iterations, so a feasible and optimal point results in the limit.
 For details and theoretical convergence, we refer the reader to the original paper [@bielschowsky2008dynamic].
 
-One of the significant advantages of our implementation is that the normal step is factorization free, i.e., it uses second-order information via Hessian-vector products but does not need access to the Hessian as an explicit matrix.
-This makes `DCISolver.jl` a valuable asset for large-scale problems, for instance to solve PDE-constrained optimization problems [@migot-orban-siqueira-pdenlpmodels-2021].
-
-`DCISolver.jl` is built upon the JuliaSmoothOptimizers (JSO) tools [@jso]. JSO is an academic organization containing a collection of Julia packages for nonlinear optimization software development, testing, and benchmarking. It provides tools for building models, accessing repositories of problems, and solving subproblems. `DCISolver.jl` takes as input an `AbstractNLPModel`, JSO's general model API defined in `NLPModels.jl` [@orban-siqueira-nlpmodels-2020], a flexible data type to evaluate objective and constraints, their derivatives, and to provide any information that a solver might request from a model. The user can hand-code derivatives, use automatic differentiation, or use JSO-interfaces to classical mathematical optimization modeling languages such as AMPL [@fourer2003ampl], CUTEst [@cutest] or JuMP [@jump].
-
-<!--
-NOTE: I'm not sure what this sentence says. It's not true that we access explicit Hessians and operators through a consistent interface via dispatch.
-
-Moreover, the API handles sparse matrices and operators for matrix-free implementations. We exploit here Julia's multiple dispatch facilities to specialize instances to different contexts efficiently.
--->
+`DCISolver.jl` is built upon the JuliaSmoothOptimizers (JSO) tools [@jso]. JSO is an academic organization containing a collection of Julia packages for nonlinear optimization software development, testing, and benchmarking. It provides tools for building models, accessing repositories of problems, and solving subproblems. `DCISolver.jl` takes as input an `AbstractNLPModel`, JSO's general model API defined in `NLPModels.jl` [@orban-siqueira-nlpmodels-2020], a flexible data type to evaluate objective and constraints, their derivatives, and to provide any information that a solver might request from a model. The user can hand-code derivatives, use automatic differentiation, or use JSO-interfaces to classical mathematical optimization modeling languages such as AMPL [@fourer2003ampl], CUTEst [@cutest] or JuMP [@jump]. Moreover, the API handles sparse matrices and operators for matrix-free implementations.
 
 Internally, `DCISolver.jl` combines cutting-edge numerical linear algebra solvers. The normal step relies heavily on iterative methods for linear algebra from `Krylov.jl` [@montoison-orban-krylov-2020], which provides more than 25 implementations of standard and novel Krylov methods, and they all can be used with Nvidia GPU via CUDA.jl [@besard2018juliagpu].
 The tangential step is computed using the sparse factorization of a symmetric and quasi-definie matrix via `LDLFactorizations.jl` [@orban-ldlfactorizations-2020], or the well-known Fortran code `MA57` [@duff-2004] from the @HSL, via `HSL.jl` [@orban-hsl-2021].
 
+One of the significant advantages of our implementation is that the normal step is factorization free, i.e., it uses second-order information via Hessian-vector products but does not need access to the Hessian as an explicit matrix.
+This makes `DCISolver.jl` a valuable asset for large-scale problems, for instance to solve PDE-constrained optimization problems [@migot-orban-siqueira-pdenlpmodels-2021] as illustrated in `PDEOptimizationProblems` [@pdeoptimizationproblems].
+
 <!--
 NOTE: Next paragraph is not really relevant here. Who cares what the return value is? What's the performance? Can I use DCI to solve a PDE problem? How?
--->
 
-`DCISolver.jl` returns a structure containing the information available at the end of the run, including a solver status, the objective function value, the norm of the constraint function, the elapsed time, and a dictionary of solver specifics. All in all, with a few lines of codes, one can solve large-scale problems or benchmark `DCISolver.jl` against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
-We refer to the website \href{https://juliasmoothoptimizers.github.io/}{juliasmoothoptimizers.github.io} for tutorials.
+Maybe say a word about performance here?
+-->
 
 # Statement of need
 
+Julia has been designed to efficiently implement softwares and algorithms fundamental to the field of operations research, particularly in mathematical optimization [@lubin2015computing], and has become a natural choice for delopping new solvers. `DCISolver.jl` is coded in pure Julia, hence it does not require external compiled dependencies and work with multiple input data types.
 <!--
 NOTE: This paragraph sells Julia when it should be selling DCI. It's ok to have a sentence or two about Julia, but the focus should be on DCI.
 
@@ -96,6 +90,57 @@ NOTE: Finally, a word about benchmarks! But we should show a taste of the perfor
 
 Last but not least, the documentation of this package includes benchmarks on classical test sets, e.g., CUTEst [@cutest], showing that this implementation is also very competitive.
 -->
+
+All in all, with a few lines of codes, one can benchmark `DCISolver.jl` against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020] or solve large-scale problems.
+Last but not least, the documentation of this package includes benchmarks on classical test sets, e.g., CUTEst [@cutest], showing that this implementation is also very competitive.
+
+```
+using CUTEst, DCISolver, NLPModels, NLPModelsIpopt, Plots, SolverBenchmark
+
+problems = readlines("list_problems.dat")
+cutest_problems = (CUTEstModel(p) for p in problems)
+
+solvers = Dict(
+  :ipopt => nlp -> ipopt(
+      nlp,
+      print_level = 0,
+      dual_inf_tol = Inf,
+      constr_viol_tol = Inf,
+      compl_inf_tol = Inf,
+      acceptable_iter = 0,
+      max_cpu_time = 1200.0,
+      tol = 1e-5,
+  ),
+  :dcildl => nlp -> dci(
+      nlp,
+      linear_solver = :ldlfact,
+      max_time = 1200.0,
+      max_iter = typemax(Int64),
+      max_eval = typemax(Int64),
+      atol = 1e-5,
+      ctol = 1e-5,
+      rtol = 1e-5,
+  ),
+)
+stats = bmark_solvers(solvers, cutest_problems)
+
+solved(df) = (df.status .== :first_order)
+costs = [
+  df -> .!solved(df) * Inf + df.elapsed_time,
+  df -> .!solved(df) * Inf + df.neval_obj + df.neval_cons,
+]
+costnames = ["Time", "Evalutions of obj + cons"]
+p = profile_solvers(stats, costs, costnames)
+```
+
+![](ipopt_dcildl_82.png)
+
+```
+using DCISolver, PDEOptimizationProblems
+nlp = burger1d() # An optimization problem with a 1D Burger's equation in the constraints
+stats = dci(nlp) # solve with DCISolver
+# stats is a structure containing the information available at the end of the run, including a solver status, the objective function value, the norm of the constraint function, the elapsed time, and a dictionary of solver specifics.
+```
 
 # Acknowledgements
 
