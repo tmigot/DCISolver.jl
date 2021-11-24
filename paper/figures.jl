@@ -9,5 +9,5 @@ costs = [
 ]
 costnames = ["Time", "Evalutions of obj + cons"]
 p = profile_solvers(stats, costs, costnames)
-# png(p, "ipopt_dcildl_82")
-Plots.svg(p, "ipopt_dcildl_82")
+png(p, "ipopt_dcildl_82")
+# Plots.svg(p, "ipopt_dcildl_82")
