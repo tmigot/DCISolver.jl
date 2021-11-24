@@ -5,9 +5,8 @@ using JLD2, Plots, SolverBenchmark #, SolverCore
 solved(df) = (df.status .== :first_order)
 costs = [
   df -> .!solved(df) * Inf + df.elapsed_time,
-  df -> .!solved(df) * Inf + df.neval_obj + df.neval_cons,
 ]
-costnames = ["Time", "Evaluations of obj + cons"]
+costnames = ["Time"]
 p = profile_solvers(stats, costs, costnames)
-png(p, "ipopt_dcildl_82")
+png(p, "ipopt_dcildl_82_time")
 # Plots.svg(p, "ipopt_dcildl_82")
