@@ -42,12 +42,12 @@ Each time the trust cylinder is violated during the tangential step, the normal 
 The radius $\rho$ of the trust cylinder decreases with the iterations, so a feasible and optimal point results in the limit.
 For details and theoretical convergence, we refer the reader to the original paper [@bielschowsky2008dynamic].
 
-`DCISolver.jl` is built upon the JuliaSmoothOptimizers (JSO) tools [@jso]. JSO is an academic organization containing a collection of Julia packages for nonlinear optimization software development, testing, and benchmarking. It provides tools for building models, accessing problems repositories, and solving subproblems. `DCISolver.jl` takes as input an `AbstractNLPModel`, JSO's general model API defined in `NLPModels.jl` [@orban-siqueira-nlpmodels-2020], a flexible data type to evaluate objective and constraints, their derivatives, and to provide any information that a solver might request from a model. The user can hand-code derivatives, use automatic differentiation, or use JSO-interfaces to classical mathematical optimization modeling languages such as AMPL [@fourer2003ampl], CUTEst [@cutest] or JuMP [@jump]. 
+`DCISolver.jl` is built upon the JuliaSmoothOptimizers (JSO) tools [@jso]. JSO is an academic organization containing a collection of Julia packages for nonlinear optimization software development, testing, and benchmarking. It provides tools for building models, accessing problems repositories, and solving subproblems. `DCISolver.jl` takes as input an `AbstractNLPModel`, JSO's general model API defined in `NLPModels.jl` [@orban-siqueira-nlpmodels-2020], a flexible data type to evaluate objective and constraints, their derivatives, and to provide any information that a solver might request from a model. The user can hand-code derivatives, use automatic differentiation, or use JSO-interfaces to classical mathematical optimization modeling languages such as AMPL [@fourer2003ampl], CUTEst [@cutest], or JuMP [@jump]. 
 
 Internally, `DCISolver.jl` combines cutting-edge numerical linear algebra solvers. The normal step relies heavily on iterative methods for linear algebra from `Krylov.jl` [@montoison-orban-krylov-2020], which provides more than 25 implementations of standard and novel Krylov methods, and they all can be used with Nvidia GPU via CUDA.jl [@besard2018juliagpu].
-The tangential step is computed using the sparse factorization of a symmetric and quasi-definie matrix via `LDLFactorizations.jl` [@orban-ldlfactorizations-2020], or the well-known Fortran code `MA57` [@duff-2004] from the @HSL, via `HSL.jl` [@orban-hsl-2021].
+The tangential step is computed using the sparse factorization of a symmetric and quasi-definite matrix via `LDLFactorizations.jl` [@orban-ldlfactorizations-2020], or the well-known Fortran code `MA57` [@duff-2004] from the @HSL, via `HSL.jl` [@orban-hsl-2021].
 
-One of the significant advantages of our implementation is that the normal step is factorization free, i.e., it uses second-order information via Hessian-vector products but does not need access to the Hessian as an explicit matrix.
+One of the significant advantages of our implementation is that the normal step is factorization-free, i.e., it uses second-order information via Hessian-vector products but does not need access to the Hessian as an explicit matrix.
 This makes `DCISolver.jl` a valuable asset for large-scale problems, for instance to solve PDE-constrained optimization problems [@migot-orban-siqueira-pdenlpmodels-2021] as illustrated in `PDEOptimizationProblems` [@pdeoptimizationproblems].
 In the current implementation, the tangential step requires the explicit hessian, but removing that restriction is the subject of ongoing research, as is the treatment of inequality constraints.
 
@@ -59,24 +59,13 @@ There already exist ways to solve \eqref{eq:nlp} in Julia.
 If \eqref{eq:nlp} is amenable to being modeled in `JuMP` [@jump], the model may be passed to state-of-the-art solvers, implemented in low-level compiled languages, via wrappers thanks to Julia's native interoperability with such languages.
 However, interfaces to low-level languages have limitations that pure Julia implementations do not have, including the ability to apply solvers with various arithmetic types.
 `Optim.jl` [@mogensen2018optim] implements a factorization-based pure Julia primal-dual interior-point method for problems with both equality and inequality constraints modeled after Artlelys Knitro [@byrd2006k] and Ipopt [@wachter2006implementation].
-
 `Percival.jl` [@percival-jl] is a factorization-free pure Julia implementation of an augmented Lagrangian method for problems with both equality and inequality constraints based on bound-constrained subproblems.
-
-<!--
-JSO offers both types of solution mechanisms with thin wrappers to Artelys Knitro via `NLPModelsKnitro.jl` [@orban-siqueira-nlpmodelsknitro-2020] and Ipopt via `NLPModelsIpopt.jl` [@orban-siqueira-nlpmodelsipopt-2020] that let users pass in an `AbstractNLPModel`
-One main advantage of JSO-compliant solvers is the consistent API; the origin of the input problem is irrelevant.
--->
-
-<!--
-`DCISolver.jl` is coded in pure Julia, hence it does not require external compiled dependencies and work with multiple input data types.
--->
 
 To the best of our knowledge, there is no available maintained open-source implementation of DCI in existence. The original authors did not make their implementation public, and the other known implementation is `dcicpp` [@dcicpp], extending the original method to inequalities in the Ph.D. thesis by @siqueira2013controle, and it has had no updates in the last 5 years. Hence, we offer an interesting alternative to augmented Lagrangian and interior-point methods in the form of an evolving, research level yet stable solver.
 
-`DCISolver.jl` can solve large-scale problems, and can be benchmarked easily against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
-We include below performance profiles [@dolan2002benchmarking] of `DCISolver.jl` against Ipopt on CUTEst [@cutest] problems with up to 10 000 variables and 10 000 constraints (82 problems). Without explaining performance profiles in full details, the plots show that Ipopt is the fastest on about 30% of the problems, while DCI is the fastest on 70%, and both solvers solve 85% of the problems successfully.
-Ipopt ... (talk with evaluations)
-This performance profile is very encouraging for such a young implementation.
+`DCISolver.jl` can solve large-scale problems and can be benchmarked easily against other JSO-compliant solvers using `SolverBenchmark.jl` [@orban-siqueira-solverbenchmark-2020].
+We include below performance profiles [@dolan2002benchmarking] of `DCISolver.jl` against Ipopt on 82 problems from CUTEst [@cutest] with up to 10 000 variables and 10 000 constraints. Without explaining performance profiles in full detail, Ipopt solved 72 problems (88%) successfully, which is one more than DCI. Among the 71 problems solved by both solvers, the plot on the left shows that Ipopt is the fastest on 20 of the problems (29%), while DCI is the fastest on 51 of the problems (71%). The plot on the right shows that Ipopt used fewer or equal evaluations of objective and the constraint functions on 51 of the problems (71%), DCI used fewer or equal evaluations on 17 problems (24%), while there was a tie for 4 problems (5%).
+Overall, this performance profile is very encouraging for such a young implementation.
 The package's documentation includes more extensive benchmarks on classical test sets showing that `DCISolver.jl` is also competitive with Knitro.
 
 <!--
@@ -123,7 +112,7 @@ p = profile_solvers(stats, costs, costnames)
 ```
 -->
 
-![](ipopt_dcildl_82.png){ width=50% }
+![](ipopt_dcildl_82.png){ width=70% }
 
 # Acknowledgements
 
